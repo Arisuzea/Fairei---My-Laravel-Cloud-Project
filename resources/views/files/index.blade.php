@@ -59,43 +59,47 @@
                     @if($files->isEmpty())
                         <p class="text-gray-500 dark:text-gray-400 text-center py-8">No files uploaded yet.</p>
                     @else
-                        <div class="space-y-3">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                             @foreach($files as $file)
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition duration-200">
-                                    <div class="flex items-center space-x-4 flex-1 min-w-0">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                                                {{ $file->original_name }}
-                                            </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $file->formatted_size }} • {{ $file->created_at->diffForHumans() }}
-                                            </p>
-                                        </div>
+                                <div class="group bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 overflow-hidden">
+                                    <!-- Preview Area -->
+                                    <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 flex items-center justify-center p-4">
+                                        @if($file->file_type === 'image')
+                                            <img src="{{ route('files.thumbnail', $file) }}" alt="{{ $file->original_name }}" class="w-full h-full object-cover rounded-lg">
+                                        @else
+                                            <x-file-icon :file="$file" size="large" />
+                                        @endif
                                     </div>
                                     
-                                    <div class="flex items-center space-x-2 ml-4">
-                                        <a 
-                                            href="{{ route('files.download', $file) }}"
-                                            class="px-3 py-2 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition duration-200"
-                                        >
-                                            Download
-                                        </a>
+                                    <!-- File Info -->
+                                    <div class="p-3 bg-white dark:bg-gray-800">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1" title="{{ $file->original_name }}">
+                                            {{ $file->original_name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                            {{ $file->formatted_size }} • {{ $file->created_at->diffForHumans() }}
+                                        </p>
                                         
-                                        <form action="{{ route('files.destroy', $file) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button 
-                                                type="submit"
-                                                class="px-3 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                                        <!-- Actions -->
+                                        <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                            <a 
+                                                href="{{ route('files.download', $file) }}"
+                                                class="flex-1 px-2 py-1.5 bg-primary-500 text-white text-xs font-medium rounded-lg hover:bg-primary-600 transition duration-200 text-center"
                                             >
-                                                Delete
-                                            </button>
-                                        </form>
+                                                Download
+                                            </a>
+                                            
+                                            <form action="{{ route('files.destroy', $file) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="flex-1">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button 
+                                                    type="submit"
+                                                    class="w-full px-2 py-1.5 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
