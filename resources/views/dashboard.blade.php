@@ -119,14 +119,6 @@
             </div>
             @endif
 
-            @foreach($recentFiles->take(1) as $testFile)
-                <div class="p-4 bg-red-100 mb-4">
-                    <p>File ID: {{ $testFile->id }}</p>
-                    <p>File Type: {{ $testFile->file_type }}</p>
-                    <p>Has thumbnail_url: {{ $testFile->thumbnail_url ? 'YES' : 'NO' }}</p>
-                    <p>Thumbnail length: {{ $testFile->thumbnail_url ? strlen($testFile->thumbnail_url) : 0 }}</p>
-                </div>
-            @endforeach
             <!-- Recent Files -->
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
